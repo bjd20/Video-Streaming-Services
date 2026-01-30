@@ -1,5 +1,7 @@
 rootProject.name = "video-streaming-app"
 
 include(
-    "eureka-server"
+    "eureka-server",
+    "api-gateway",
+    "account-service"
 )

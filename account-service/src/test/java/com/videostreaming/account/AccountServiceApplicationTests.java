@@ -1,10 +1,10 @@
-package com.streaming.eureka;
+package com.videostreaming.account;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class EurekaServerApplicationTests {
+class AccountServiceApplicationTests {
 
 	@Test
 	void contextLoads() {

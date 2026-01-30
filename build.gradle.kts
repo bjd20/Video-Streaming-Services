@@ -5,7 +5,7 @@ plugins {
 }
 
 allprojects {
-    group = "com.streaming"
+    group = "com.videostreaming"
     version = "1.0.0"
 
     repositories {
