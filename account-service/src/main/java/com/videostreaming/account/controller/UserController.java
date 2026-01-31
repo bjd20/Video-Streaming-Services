@@ -1,9 +1,12 @@
 package com.videostreaming.account.controller;
 
+import com.videostreaming.account.model.dto.ChangePasswordRequest;
 import com.videostreaming.account.model.dto.UserRequest;
 import com.videostreaming.account.model.dto.UserResponse;
 import com.videostreaming.account.service.UserService;
 import com.videostreaming.account.service.UserServiceImpl;
+import jakarta.validation.Valid;
+import org.apache.hc.core5.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,13 +32,19 @@ public class UserController {
     }
 
     @PostMapping
-    public UserResponse createUser(@RequestBody UserRequest userRequest){
-        return userService.createUser(userRequest);
+    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest userRequest){
+        UserResponse created = userService.createUser(userRequest);
+        return ResponseEntity.status(HttpStatus.SC_CREATED).body(created);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserRequest userRequest){
+    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id,@Valid @RequestBody UserRequest userRequest){
         return ResponseEntity.ok(userService.updateUser(id,userRequest));
+    }
+
+    @PutMapping("/{id}/password")
+    public ResponseEntity<UserResponse> changePassword(@PathVariable Long id, @Valid @RequestBody ChangePasswordRequest passwordRequest){
+        return ResponseEntity.ok(userService.changePassword(id, passwordRequest));
     }
 
     @DeleteMapping("/{id}")
