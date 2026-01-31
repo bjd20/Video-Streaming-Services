@@ -5,9 +5,11 @@ import com.videostreaming.account.exception.InvalidPasswordException;
 import com.videostreaming.account.exception.UserNotFoundException;
 import com.videostreaming.account.model.User;
 import com.videostreaming.account.model.dto.ChangePasswordRequest;
+import com.videostreaming.account.model.dto.LoginRequest;
 import com.videostreaming.account.model.dto.UserRequest;
 import com.videostreaming.account.model.dto.UserResponse;
 import com.videostreaming.account.repository.UserRepository;
+import com.videostreaming.account.security.JwtUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +20,14 @@ public class UserServiceImpl implements UserService{
 
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
-    public UserServiceImpl(UserRepository repository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository repository,
+                           PasswordEncoder passwordEncoder,
+                           JwtUtil jwtUtil) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -74,6 +80,25 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(() -> new UserNotFoundException(id));
 
         return toResponse(updated);
+    }
+
+    @Override
+    public String login(LoginRequest loginRequest) {
+
+        User user = repository.findByUserName(loginRequest.getUserName())
+                .orElseThrow(() -> new InvalidPasswordException("Invalid UserName or Password"));
+
+        // Verify Password
+        if(!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
+            throw new InvalidPasswordException("Incorrect Password");
+        }
+
+        //Generate JWT Token
+        return jwtUtil.generateToken(
+                user.getId(),
+                user.getEmail(),
+                user.getUserName()
+        );
     }
 
     @Override
