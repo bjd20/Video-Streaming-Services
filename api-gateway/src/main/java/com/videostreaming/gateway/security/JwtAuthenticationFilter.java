@@ -48,8 +48,10 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
 
         // Extract user info and add to headers for downstream services
         String userName = jwtUtil.extractUserName(token);
+        Long userId = jwtUtil.extractUserId(token);
 
         ServerHttpRequest modifiedRequest = request.mutate()
+                .header("X-User-Id", String.valueOf(userId))
                 .header("X-User-Name", userName)
                 .build();
 
