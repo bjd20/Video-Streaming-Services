@@ -4,7 +4,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7"
 }
 
-group = "com.example"
+group = "com.videostreaming"
 version = "0.0.1-SNAPSHOT"
 description = "Account Service for Video Streaming"
 
