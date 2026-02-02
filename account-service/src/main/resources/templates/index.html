@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Account Service</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+
+<div class="container">
+
+
+    <header>
+        <h1>Account Service</h1>
+        <p>Secure User Account Management & Authorization</p>
+    </header>
+
+
+    <!-- GET APIs -->
+    <div class="section">
+        <h2>🔍 Fetch Users</h2>
+        <div class="links">
+            <a th:href="@{/users}" target="_blank">GET /users</a>
+
+            <form onsubmit="return goToUser()">
+                <label>User Id</label>
+                <input type="text" id="userId" required>
+                <button type="submit">Get User</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function goToUser() {
+            const id = document.getElementById("userId").value;
+            window.open(`/api/account/users/${id}`, '_blank');
+            return false;
+        }
+    </script>
+
+
+    <!-- POST Create User -->
+    <div class="section">
+        <h2>➕ Create User</h2>
+        <form id="createUserForm">
+            <label>User Name</label>
+            <input type="text" id="userName" required>
+
+            <label>Email</label>
+            <input type="email" id="email" required>
+
+            <label>Password</label>
+            <input type="password" id="password" required>
+
+            <button type="submit">Create User</button>
+        </form>
+    </div>
+
+
+    <!-- PUT Update User -->
+    <div class="section">
+        <h2>✏️ Update User</h2>
+        <form id="updateUserForm">
+            <label>User ID</label>
+            <input type="number" id="updateId" required>
+
+            <label>User Name</label>
+            <input type="text" id="updateUserName" required>
+
+            <label>Email</label>
+            <input type="email" id="updateEmail" required>
+
+            <label>Password</label>
+            <input type="password" id="updatePassword" required>
+
+            <button type="submit">Update User</button>
+        </form>
+    </div>
+
+
+</div>
+</body>
+
+<script>
+    document.getElementById("createUserForm")
+        .addEventListener("submit", function (e) {
+
+            e.preventDefault(); // stop normal form submit
+
+            const payload = {
+                userName: document.getElementById("userName").value,
+                email: document.getElementById("email").value,
+                password: document.getElementById("password").value
+            };
+
+            fetch("/api/account/users", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                // open response in new tab
+                const newTab = window.open();
+                newTab.document.write(
+                    "<pre>" + JSON.stringify(data, null, 2) + "</pre>"
+                );
+            })
+            .catch(err => {
+                alert("Error creating user");
+                console.error(err);
+            });
+        });
+
+
+    document.getElementById("updateUserForm")
+        .addEventListener("submit", function (e) {
+
+            e.preventDefault();
+
+            const id = document.getElementById("updateId").value;
+
+            const payload = {
+                userName: document.getElementById("updateUserName").value,
+                email: document.getElementById("updateEmail").value,
+                password: document.getElementById("updatePassword").value
+            };
+
+            fetch(`/api/account/users/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                const newTab = window.open();
+                newTab.document.write(
+                    "<pre>" + JSON.stringify(data, null, 2) + "</pre>"
+                );
+            })
+            .catch(err => {
+                alert("Error updating user");
+                console.error(err);
+            });
+        });
+</script>
+
+</html>
