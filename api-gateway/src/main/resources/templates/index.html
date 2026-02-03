@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${appName}">Video Streaming</title>
+    <link rel="stylesheet" th:href="@{/css/style_index.css}">
+</head>
+<body>
+<div class="container">
+    <div class="emoji">🎬</div>
+    <h1 th:text="${appName}">Video Streaming Microservices</h1>
+    <p class="version" th:text="'Version ' + ${version}">Version 1.0.0</p>
+
+    <p class="description">
+        Welcome to the Video Streaming Microservices Admin Panel.
+        This application demonstrates a production-grade microservices architecture
+        built with Spring Boot, featuring service discovery, API gateway,
+        and polyglot persistence.
+    </p>
+
+    <div class="links">
+        <a th:href="@{/admin}" class="btn">
+            📊 Admin Dashboard & API Testing
+        </a>
+        <a th:href="${swaggerUrl}" class="btn secondary" target="_blank">
+            📚 API Documentation (Swagger)
+        </a>
+        <a th:href="${eurekaUrl}" class="btn tertiary" target="_blank">
+            🔍 Service Discovery (Eureka)
+        </a>
+    </div>
+
+    <div class="info">
+        <h3>Architecture Components</h3>
+        <ul>
+            <li>Spring Boot Microservices</li>
+            <li>Netflix Eureka (Service Discovery)</li>
+            <li>Spring Cloud Gateway (API Gateway)</li>
+            <li>JWT Authentication</li>
+            <li>PostgreSQL (Account Data)</li>
+            <li>MongoDB (Video Data)</li>
+            <li>Docker Containerization</li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

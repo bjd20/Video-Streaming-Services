@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Video Streaming</title>
+    <link rel="stylesheet" th:href="@{/css/style_admin.css}">
+
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <h1>🎬 Admin Dashboard</h1>
+        <p>API Testing & Service Monitoring</p>
+        <div class="nav-links">
+            <a th:href="@{/}" class="nav-link">🏠 Home</a>
+            <a href="/swagger-ui.html" class="nav-link" target="_blank">📚 Swagger</a>
+            <a href="http://localhost:8761" class="nav-link" target="_blank">🔍 Eureka</a>
+        </div>
+    </div>
+
+    <!-- Service Status -->
+    <div class="status-grid">
+        <div class="status-card" th:each="service : ${services}">
+            <h3>
+                <span class="status-indicator"></span>
+                <span th:text="${service[0]}">Service Name</span>
+            </h3>
+            <p>Port: <span th:text="${service[1]}">8080</span></p>
+            <p>Status: <span th:text="${service[2]}">Running</span></p>
+        </div>
+    </div>
+
+    <!-- User Registration -->
+    <div class="api-section">
+        <h2>👤 User Registration</h2>
+        <form id="registerForm">
+            <div class="form-group">
+                <label>Username:</label>
+                <input type="text" id="reg-username" required>
+            </div>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" id="reg-email" required>
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" id="reg-password" required>
+            </div>
+            <button type="submit" class="btn">Register User</button>
+        </form>
+        <div id="register-response"></div>
+    </div>
+
+    <!-- User Login -->
+    <div class="api-section">
+        <h2>🔐 User Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Username:</label>
+                <input type="text" id="login-username" required>
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" id="login-password" required>
+            </div>
+            <button type="submit" class="btn">Login</button>
+        </form>
+        <div id="login-response"></div>
+        <div id="token-display" style="display: none;" class="token-box">
+            <strong>🔑 JWT Token:</strong>
+            <p id="token-value"></p>
+        </div>
+    </div>
+
+    <!-- Create Video -->
+    <div class="api-section">
+        <h2>🎥 Upload Video (Requires Login)</h2>
+        <form id="videoForm">
+            <div class="form-group">
+                <label>Title:</label>
+                <input type="text" id="video-title" required>
+            </div>
+            <div class="form-group">
+                <label>Description:</label>
+                <textarea id="video-description" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label>Video URL:</label>
+                <input type="url" id="video-url" required>
+            </div>
+            <div class="form-group">
+                <label>Thumbnail URL:</label>
+                <input type="url" id="thumbnail-url" required>
+            </div>
+            <button type="submit" class="btn">Create Video</button>
+        </form>
+        <div id="video-response"></div>
+    </div>
+
+    <!-- Get All Videos -->
+    <div class="api-section">
+        <h2>📋 Get All Videos</h2>
+        <button onclick="getAllVideos()" class="btn">Fetch All Videos</button>
+        <div id="all-videos-response"></div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    let jwtToken = '';
+
+    // Register Form
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const responseDiv = document.getElementById('register-response');
+        responseDiv.innerHTML = 'Loading...';
+
+        try {
+            const response = await fetch('/api/account/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userName: document.getElementById('reg-username').value,
+                    email: document.getElementById('reg-email').value,
+                    password: document.getElementById('reg-password').value
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                responseDiv.className = 'response-box success';
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+                document.getElementById('registerForm').reset();
+            } else {
+                responseDiv.className = 'response-box error';
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+            }
+        } catch (error) {
+            responseDiv.className = 'response-box error';
+            responseDiv.textContent = 'Error: ' + error.message;
+        }
+    });
+
+    // Login Form
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const responseDiv = document.getElementById('login-response');
+        responseDiv.innerHTML = 'Loading...';
+
+        try {
+            const response = await fetch('/api/account/users/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userName: document.getElementById('login-username').value,
+                    password: document.getElementById('login-password').value
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.token) {
+                jwtToken = data.token;
+                responseDiv.className = 'response-box success';
+                responseDiv.textContent = 'Login successful!';
+
+                document.getElementById('token-display').style.display = 'block';
+                document.getElementById('token-value').textContent = jwtToken;
+
+                document.getElementById('loginForm').reset();
+            } else {
+                responseDiv.className = 'response-box error';
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+            }
+        } catch (error) {
+            responseDiv.className = 'response-box error';
+            responseDiv.textContent = 'Error: ' + error.message;
+        }
+    });
+
+    // Video Form
+    document.getElementById('videoForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const responseDiv = document.getElementById('video-response');
+
+        if (!jwtToken) {
+            responseDiv.className = 'response-box error';
+            responseDiv.textContent = 'Please login first!';
+            return;
+        }
+
+        responseDiv.innerHTML = 'Loading...';
+
+        try {
+            const response = await fetch('/api/videos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + jwtToken
+                },
+                body: JSON.stringify({
+                    title: document.getElementById('video-title').value,
+                    description: document.getElementById('video-description').value,
+                    duration: 60,
+                    videoUrl: document.getElementById('video-url').value,
+                    thumbnailUrl: document.getElementById('thumbnail-url').value
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                responseDiv.className = 'response-box success';
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+                document.getElementById('videoForm').reset();
+            } else {
+                responseDiv.className = 'response-box error';
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+            }
+        } catch (error) {
+            responseDiv.className = 'response-box error';
+            responseDiv.textContent = 'Error: ' + error.message;
+        }
+    });
+
+    // Get All Videos
+    async function getAllVideos() {
+    const responseDiv = document.getElementById('all-videos-response');
+    responseDiv.innerHTML = 'Loading...';
+
+    try {
+        // ✅ Build headers conditionally
+        const headers = {};
+        if (jwtToken) {
+            headers['Authorization'] = 'Bearer ' + jwtToken;
+        }
+
+        const response = await fetch('/api/videos', {
+            method: 'GET',
+            headers: headers
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            responseDiv.className = 'response-box success';
+
+            // ✅ Show different message based on auth status
+            let displayText = '';
+            if (jwtToken) {
+                displayText = '🔐 Authenticated View:\n\n';
+            } else {
+                displayText = '👁️ Public View (Login to see more):\n\n';
+            }
+            displayText += JSON.stringify(data, null, 2);
+
+            responseDiv.textContent = displayText;
+        } else {
+            responseDiv.className = 'response-box error';
+            responseDiv.textContent = JSON.stringify(data, null, 2);
+        }
+    } catch (error) {
+        responseDiv.className = 'response-box error';
+        responseDiv.textContent = 'Error: ' + error.message;
+    }
+}
+</script>
+</body>
+</html>

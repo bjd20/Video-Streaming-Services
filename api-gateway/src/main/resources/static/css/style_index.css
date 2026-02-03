@@ -1,0 +1,115 @@
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .container {
+        background: white;
+        padding: 50px;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        text-align: center;
+        max-width: 600px;
+    }
+
+    h1 {
+        color: #667eea;
+        font-size: 2.5em;
+        margin-bottom: 10px;
+    }
+
+    .version {
+        color: #888;
+        margin-bottom: 30px;
+    }
+
+    .emoji {
+        font-size: 4em;
+        margin-bottom: 20px;
+    }
+
+    .description {
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 30px;
+    }
+
+    .links {
+        display: grid;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .btn {
+        display: block;
+        background: #667eea;
+        color: white;
+        padding: 15px 30px;
+        text-decoration: none;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s;
+        font-size: 16px;
+    }
+
+    .btn:hover {
+        background: #5568d3;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn.secondary {
+        background: #10b981;
+    }
+
+    .btn.secondary:hover {
+        background: #059669;
+    }
+
+    .btn.tertiary {
+        background: #f59e0b;
+    }
+
+    .btn.tertiary:hover {
+        background: #d97706;
+    }
+
+    .info {
+        background: #f0f4ff;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 30px;
+        border-left: 4px solid #667eea;
+    }
+
+    .info h3 {
+        color: #667eea;
+        margin-bottom: 10px;
+    }
+
+    .info ul {
+        list-style: none;
+        text-align: left;
+        color: #555;
+    }
+
+    .info li {
+        padding: 5px 0;
+    }
+
+    .info li:before {
+        content: "✓ ";
+        color: #10b981;
+        font-weight: bold;
+    }

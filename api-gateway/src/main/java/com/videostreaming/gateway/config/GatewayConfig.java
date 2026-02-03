@@ -13,7 +13,7 @@ public class GatewayConfig {
         return builder.routes()
                 .route("account-service", r -> r.path("/api/account", "/api/account/**")
                         .uri("lb://account-service") )
-                .route("video-service", r -> r.path("/api/video", "/api/video/**")
+                .route("video-service", r -> r.path("/api/videos", "/api/videos/**")
                         .uri("lb://video-service"))
                 .build();
     }
