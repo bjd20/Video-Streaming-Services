@@ -65,10 +65,17 @@ services:
       dockerfile: Dockerfile
     container_name: account-service
     environment:
+      # Activate Docker profile
+      SPRING_PROFILES_ACTIVE: docker
+      # Override database connection
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/account_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      #  Use container hostname
+      HOSTNAME: account-service
+      EUREKA_INSTANCE_HOSTNAME: account-service
+      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "false"
     ports:
       - "8081:8081"
     depends_on:
@@ -86,8 +93,14 @@ services:
       dockerfile: Dockerfile
     container_name: video-service
     environment:
+      SPRING_PROFILES_ACTIVE: docker
+
       SPRING_DATA_MONGODB_URI: mongodb://admin:admin@mongodb:27017/video_db?authSource=admin
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+      HOSTNAME: video-service
+      EUREKA_INSTANCE_HOSTNAME: video-service
+      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "false"
     ports:
       - "8082:8082"
     depends_on:
@@ -105,7 +118,13 @@ services:
       dockerfile: Dockerfile
     container_name: api-gateway
     environment:
+      SPRING_PROFILES_ACTIVE: docker
+
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+      HOSTNAME: api-gateway
+      EUREKA_INSTANCE_HOSTNAME: api-gateway
+      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "false"
     ports:
       - "8080:8080"
     depends_on:
