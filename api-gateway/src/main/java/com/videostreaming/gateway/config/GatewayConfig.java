@@ -10,9 +10,9 @@ public class GatewayConfig {
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("account-service", r -> r.path("/api/account", "/api/account/**")
+                .route("route-account-service", r -> r.path("/api/account", "/api/account/**")
                         .uri("lb://account-service"))
-                .route("video-service", r -> r.path("/api/videos", "/api/videos/**")
+                .route("route-video-service", r -> r.path("/api/video", "/api/video/**")
                         .uri("lb://video-service"))
                 .build();
     }

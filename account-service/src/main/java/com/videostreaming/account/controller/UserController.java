@@ -6,6 +6,7 @@ import com.videostreaming.account.model.dto.UserRequest;
 import com.videostreaming.account.model.dto.UserResponse;
 import com.videostreaming.account.service.UserService;
 import com.videostreaming.account.service.UserServiceImpl;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.apache.hc.core5.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
+@Tag(name = "User Management", description = "Endpoints for user management")
 public class UserController {
     private final UserService userService;
 

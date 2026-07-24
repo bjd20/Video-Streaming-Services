@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+
 @Controller
 public class AdminController {
 
@@ -22,6 +23,7 @@ public class AdminController {
         return "admin"; // Returns templates/admin.html
     }
 
+//  TODO: Add Dynamically Service Status from Eureka Server or Actuators
     private String[][] getServiceStatus() {
         return new String[][] {
                 {"Eureka Server", "8761", "Running"},

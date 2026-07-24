@@ -204,7 +204,7 @@
         responseDiv.innerHTML = 'Loading...';
 
         try {
-            const response = await fetch('/api/videos', {
+            const response = await fetch('/api/video/videos', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -247,7 +247,7 @@
                 headers['Authorization'] = 'Bearer ' + jwtToken;
             }
 
-            const response = await fetch('/api/videos', {
+            const response = await fetch('/api/video/videos', {
                 method: 'GET',
                 headers: headers
             });
@@ -281,7 +281,7 @@
         responseDiv.innerHTML = 'Loading...';
 
         try {
-            const response = await fetch('/api/videos/user', {
+            const response = await fetch('/api/video/videos/user', {
                 method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + jwtToken

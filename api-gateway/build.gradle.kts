@@ -26,7 +26,6 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 
     implementation("io.jsonwebtoken:jjwt-api:0.12.6")

@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+YELLOW='\e[1;33m'
+RESET='\e[0m'
+
 # All services defined in the project
 ALL_SERVICES=("eureka-server" "api-gateway" "account-service" "video-service")
 
@@ -17,7 +20,7 @@ fi
 
 # Rebuild each specified service
 for service in "${SERVICES_TO_BUILD[@]}"; do
-  echo "Building $service..."
+  echo -e "${YELLOW}\nBuilding $service...${RESET}"
   if [ -d "$service" ]; then
     (cd "$service" && ./gradlew clean build -x test)
   else

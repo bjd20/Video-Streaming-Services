@@ -4,9 +4,13 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
+
+import java.util.List;
+import java.util.function.Predicate;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -21,12 +25,18 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
-        ServerHttpRequest request = exchange.getRequest();
+        final ServerHttpRequest request = exchange.getRequest();
 
-        // Skip authentication for login and register endpoints
-        String path = request.getURI().getPath();
-        if(path.contains("/login") ||
-                path.contains("/users") && request.getMethod().name().equals("POST")){
+        final List<String> publicApiEndpoints = List.of(
+                "/login",
+                "/swagger-ui",
+                "/api-docs"
+        );
+
+        Predicate<ServerHttpRequest> isPublic = r -> publicApiEndpoints.stream()
+                .anyMatch(uri -> r.getURI().getPath().contains(uri));
+
+        if (isPublic.test(request) || (request.getURI().getPath().contains("/users") && request.getMethod() == HttpMethod.POST)) {
             return chain.filter(exchange);
         }
 

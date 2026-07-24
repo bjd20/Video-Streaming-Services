@@ -31,15 +31,14 @@ dependencies {
     implementation("org.springframework.security:spring-security-crypto")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 //    implementation("org.modelmapper:modelmapper")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14")
+
 
     implementation("io.jsonwebtoken:jjwt-api:0.12.6")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
 
 
-//    testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
-//    testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
-//    testImplementation("org.springframework.boot:spring-boot-starter-thymeleaf-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
