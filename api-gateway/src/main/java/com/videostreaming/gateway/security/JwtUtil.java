@@ -1,5 +1,6 @@
 package com.videostreaming.gateway.security;
 
+import ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -53,6 +54,10 @@ public class JwtUtil {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+    }
+
+    public String extractEmail(String token) {
+        return extractClaims(token).get("email", String.class);
     }
 
     public Long extractUserId(String token) {

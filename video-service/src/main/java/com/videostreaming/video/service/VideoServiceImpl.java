@@ -85,7 +85,7 @@ public class VideoServiceImpl implements VideoService {
                 video.getTitle(),
                 video.getDescription(),
                 video.getDuration(),
-                video.getUploadDate(),
+                video.getUploadTimeStamp(),
                 video.getUserId(),
                 video.getUploaderName(),
                 video.getThumbnailUrl(),

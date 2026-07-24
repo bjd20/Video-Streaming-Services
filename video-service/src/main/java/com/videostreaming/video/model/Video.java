@@ -24,13 +24,14 @@ public class Video {
     @Min(value = 1, message = "Duration is at least 1 second")
     private Integer duration;  // Duration in seconds
 
+//  Needs MongoDB-auditing enabled for using the annotation '@CreatedDate'
     @CreatedDate
-    private LocalDateTime uploadDate;
+    private LocalDateTime uploadTimeStamp;
 
     @NotNull(message = "User ID is required")
     private Long userId;  // Reference to user who uploaded
 
-    private String uploaderName;    // Denormalized for easy display
+    private String uploaderName;    // Denormalized for easier and faster display
 
     private String thumbnailUrl;
 
@@ -85,12 +86,12 @@ public class Video {
         this.duration = duration;
     }
 
-    public LocalDateTime getUploadDate() {
-        return uploadDate;
+    public LocalDateTime getUploadTimeStamp() {
+        return uploadTimeStamp;
     }
 
-    public void setUploadDate(LocalDateTime uploadDate) {
-        this.uploadDate = uploadDate;
+    public void setUploadTimeStamp(LocalDateTime uploadTimeStamp) {
+        this.uploadTimeStamp = uploadTimeStamp;
     }
 
     public Long getUserId() {

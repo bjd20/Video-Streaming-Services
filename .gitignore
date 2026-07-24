@@ -16,7 +16,8 @@ Thumbs.db
 # Application
 *.log
 logs/
-
+*.env
+*.temp/
 
 ### VS Code ###
 .vscode/

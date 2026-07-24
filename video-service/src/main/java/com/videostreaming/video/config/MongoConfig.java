@@ -8,5 +8,4 @@ import org.springframework.data.mongodb.config.EnableMongoAuditing;
 public class MongoConfig {
     // This enables @CreatedDate, @LastModifiedDate, etc. to autopopulate fields
 
-
 }

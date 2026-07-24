@@ -8,7 +8,7 @@ public class VideoResponse {
     private String title;
     private String description;
     private Integer duration;
-    private LocalDateTime uploadDate;
+    private LocalDateTime uploadTimeStamp;
     private Long userId;
     private String uploaderName;
     private String thumbnailUrl;
@@ -19,13 +19,13 @@ public class VideoResponse {
     }
 
     public VideoResponse(String id, String title, String description, Integer duration,
-                         LocalDateTime uploadDate, Long userId, String uploaderName, String thumbnailUrl,
+                         LocalDateTime uploadTimeStamp, Long userId, String uploaderName, String thumbnailUrl,
                          String videoUrl, Integer viewCount) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.duration = duration;
-        this.uploadDate = uploadDate;
+        this.uploadTimeStamp = uploadTimeStamp;
         this.userId = userId;
         this.uploaderName = uploaderName;
         this.thumbnailUrl = thumbnailUrl;
@@ -66,12 +66,12 @@ public class VideoResponse {
         this.duration = duration;
     }
 
-    public LocalDateTime getUploadDate() {
-        return uploadDate;
+    public LocalDateTime getUploadTimeStamp() {
+        return uploadTimeStamp;
     }
 
-    public void setUploadDate(LocalDateTime uploadDate) {
-        this.uploadDate = uploadDate;
+    public void setUploadTimeStamp(LocalDateTime uploadTimeStamp) {
+        this.uploadTimeStamp = uploadTimeStamp;
     }
 
     public Long getUserId() {

@@ -11,7 +11,6 @@ public interface VideoRepository extends MongoRepository<Video, String> {
 
     // Custom Query methods
 
-
     List<Video> findByUserId(Long userId);
 
     // Search videos by Title (case-insensitive)

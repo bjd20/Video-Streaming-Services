@@ -59,8 +59,8 @@ public class VideoController {
     }
 
     // Get videos by user
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<VideoResponse>> getVideosByUser(@PathVariable Long userId) {
+    @GetMapping("/user")
+    public ResponseEntity<List<VideoResponse>> getVideosByUser(@RequestHeader("X-User-Id") Long userId) {
         return ResponseEntity.ok(videoService.getVideosByUserId(userId));
     }
 }

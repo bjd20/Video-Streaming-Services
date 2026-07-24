@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig {
 
     @Bean
-    public PasswordEncoder passwordEncoder() {                      // This creates a Bean of PasswordEncoder in the Spring Container
+    public PasswordEncoder passwordEncoder() {     // This creates a Bean of PasswordEncoder in the Spring Container
         return new BCryptPasswordEncoder(10);
     }
 }

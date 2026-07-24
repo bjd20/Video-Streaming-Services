@@ -74,6 +74,13 @@
         </div>
     </div>
 
+    <!-- My Videos -->
+    <div class="api-section" id="my-videos-section" style="display: none;">
+        <h2>🌟 My Videos</h2>
+        <button onclick="getMyVideos()" class="btn">Refresh My Videos</button>
+        <div id="my-videos-response"></div>
+    </div>
+
     <!-- Create Video -->
     <div class="api-section">
         <h2>🎥 Upload Video (Requires Login)</h2>
@@ -168,8 +175,11 @@
 
                 document.getElementById('token-display').style.display = 'block';
                 document.getElementById('token-value').textContent = jwtToken;
+                document.getElementById('my-videos-section').style.display = 'block';
+
 
                 document.getElementById('loginForm').reset();
+                getMyVideos(); // Fetch user's videos on login
             } else {
                 responseDiv.className = 'response-box error';
                 responseDiv.textContent = JSON.stringify(data, null, 2);
@@ -215,6 +225,7 @@
                 responseDiv.className = 'response-box success';
                 responseDiv.textContent = JSON.stringify(data, null, 2);
                 document.getElementById('videoForm').reset();
+                getMyVideos(); // Refresh my videos list after uploading a new one
             } else {
                 responseDiv.className = 'response-box error';
                 responseDiv.textContent = JSON.stringify(data, null, 2);
@@ -227,45 +238,70 @@
 
     // Get All Videos
     async function getAllVideos() {
-    const responseDiv = document.getElementById('all-videos-response');
-    responseDiv.innerHTML = 'Loading...';
+        const responseDiv = document.getElementById('all-videos-response');
+        responseDiv.innerHTML = 'Loading...';
 
-    try {
-        // ✅ Build headers conditionally
-        const headers = {};
-        if (jwtToken) {
-            headers['Authorization'] = 'Bearer ' + jwtToken;
-        }
-
-        const response = await fetch('/api/videos', {
-            method: 'GET',
-            headers: headers
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            responseDiv.className = 'response-box success';
-
-            // ✅ Show different message based on auth status
-            let displayText = '';
+        try {
+            const headers = {};
             if (jwtToken) {
-                displayText = '🔐 Authenticated View:\n\n';
-            } else {
-                displayText = '👁️ Public View (Login to see more):\n\n';
+                headers['Authorization'] = 'Bearer ' + jwtToken;
             }
-            displayText += JSON.stringify(data, null, 2);
 
-            responseDiv.textContent = displayText;
-        } else {
+            const response = await fetch('/api/videos', {
+                method: 'GET',
+                headers: headers
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                responseDiv.className = 'response-box success';
+                let displayText = jwtToken ? '🔐 Authenticated View:\n\n' : '👁️ Public View (Login to see more):\n\n';
+                displayText += JSON.stringify(data, null, 2);
+                responseDiv.textContent = displayText;
+            } else {
+                responseDiv.className = 'response-box error';
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+            }
+        } catch (error) {
             responseDiv.className = 'response-box error';
-            responseDiv.textContent = JSON.stringify(data, null, 2);
+            responseDiv.textContent = 'Error: ' + error.message;
         }
-    } catch (error) {
-        responseDiv.className = 'response-box error';
-        responseDiv.textContent = 'Error: ' + error.message;
     }
-}
+
+    // Get My Videos
+    async function getMyVideos() {
+        const responseDiv = document.getElementById('my-videos-response');
+        if (!jwtToken) {
+            responseDiv.className = 'response-box error';
+            responseDiv.textContent = 'Please login to see your videos.';
+            return;
+        }
+
+        responseDiv.innerHTML = 'Loading...';
+
+        try {
+            const response = await fetch('/api/videos/user', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + jwtToken
+                }
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                responseDiv.className = 'response-box success';
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+            } else {
+                responseDiv.className = 'response-box error';
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+            }
+        } catch (error) {
+            responseDiv.className = 'response-box error';
+            responseDiv.textContent = 'Error: ' + error.message;
+        }
+    }
 </script>
 </body>
 </html>
