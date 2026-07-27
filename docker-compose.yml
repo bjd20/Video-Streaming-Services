@@ -1,4 +1,3 @@
-
 networks:
   microservices-network:
     driver: bridge
@@ -13,10 +12,12 @@ services:
   postgres:
     image: postgres:15-alpine
     container_name: postgres-db
+    env_file:
+      - .env
     environment:
-      POSTGRES_DB: account_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5433:5432"
     volumes:
@@ -29,25 +30,6 @@ services:
       timeout: 5s
       retries: 5
 
-#  # MongoDB Database container for Video Service
-#  mongodb:
-#    image: mongo:7.0
-#    container_name: mongodb
-#    environment:
-#      MONGO_INITDB_ROOT_USERNAME: admin
-#      MONGO_INITDB_ROOT_PASSWORD: admin
-#      MONGO_INITDB_DATABASE: video_db
-#    ports:
-#      - "27017:27017"
-#    volumes:
-#      - mongodb_data:/data/db
-#    networks:
-#      - microservices-network
-#    healthcheck:
-#      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
-#      interval: 10s
-#      timeout: 5s
-#      retries: 5
 
   # Eureka Server (Service Discovery)
   eureka-server:
@@ -73,9 +55,12 @@ services:
       context: ./api-gateway
       dockerfile: Dockerfile
     container_name: api-gateway
+    env_file:
+      - .env
     environment:
       SPRING_PROFILES_ACTIVE: docker
-
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
     ports:
       - "8080:8080"
     depends_on:
@@ -90,18 +75,14 @@ services:
       context: ./account-service
       dockerfile: Dockerfile
     container_name: account-service
+    env_file:
+      - .env
     environment:
-      # Activate Docker profile
       SPRING_PROFILES_ACTIVE: docker
-#      # Override database connection
-#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/account_db
-#      SPRING_DATASOURCE_USERNAME: postgres
-#      SPRING_DATASOURCE_PASSWORD: postgres
-#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
-#      #  Use container hostname
-#      HOSTNAME: account-service
-#      EUREKA_INSTANCE_HOSTNAME: account-service
-#      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "false"
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
     ports:
       - "8081:8081"
     depends_on:
@@ -118,8 +99,11 @@ services:
       context: ./video-service
       dockerfile: Dockerfile
     container_name: video-service
+    env_file:
+      - .env
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      MONGODB_URI: ${MONGODB_URI}
     ports:
       - "8082:8082"
     depends_on:

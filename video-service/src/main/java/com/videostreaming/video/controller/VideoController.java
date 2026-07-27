@@ -60,7 +60,7 @@ public class VideoController {
         return ResponseEntity.noContent().build();
     }
 
-    // Get videos by user
+    // Get videos of the signed-user
     @GetMapping("/user")
     public ResponseEntity<List<VideoResponse>> getVideosByUser(@RequestHeader("X-User-Id") Long userId) {
         return ResponseEntity.ok(videoService.getVideosByUserId(userId));
